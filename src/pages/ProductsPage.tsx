@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
-import productsData from '../data/products.json';
+import React, { useState } from "react";
+import productsData from "@/data/products.json";
+import useSort from "@/hooks/useSort";
 
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = ['all', ...new Set(productsData.map((p) => p.category))];
+  const categories = ["all", ...new Set(productsData.map((p) => p.category))];
 
   const filteredProducts =
-    selectedCategory === 'all'
+    selectedCategory === "all"
       ? productsData
       : productsData.filter((p) => p.category === selectedCategory);
+
+  // Use useSort for Product Name and Price columns
+  const { sortedData, sort, handleSort } = useSort(filteredProducts, {
+    initialSort: [{ column: "name", order: "asc" }],
+  });
+
+  const getSortArrow = (column: string) => {
+    const sortCol = sort.find((s) => s.column === column);
+    if (!sortCol) return null;
+    return <span className="ml-1">{sortCol.order === "asc" ? "▲" : "▼"}</span>;
+  };
 
   return (
     <div className="p-6">
@@ -29,7 +41,7 @@ const Products = () => {
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
-              {cat === 'all' ? 'All Categories' : cat}
+              {cat === "all" ? "All Categories" : cat}
             </option>
           ))}
         </select>
@@ -40,14 +52,22 @@ const Products = () => {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none"
+                  onClick={() => handleSort("name")}
+                >
                   Product Name
+                  {getSortArrow("name")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none"
+                  onClick={() => handleSort("price")}
+                >
                   Price
+                  {getSortArrow("price")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Stock
@@ -55,7 +75,7 @@ const Products = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredProducts.map((product) => (
+              {sortedData.map((product) => (
                 <tr
                   key={product.id}
                   className="hover:bg-gray-50 transition-colors"
