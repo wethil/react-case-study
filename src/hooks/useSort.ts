@@ -2,23 +2,26 @@ import { useState, useCallback, useMemo } from "react";
 
 type SortOrder = "asc" | "desc";
 
+type SortColumn<T> = {
+  column: keyof T;
+  order: SortOrder;
+};
+
 interface UseSortOptions<T> {
-  initialSortBy?: keyof T;
-  initialSortOrder?: SortOrder;
+  initialSort?: SortColumn<T>[];
 }
 
 interface UseSortReturn<T> {
   sortedData: T[];
-  sortBy: keyof T;
-  sortOrder: SortOrder;
+  sort: SortColumn<T>[];
   handleSort: (column: keyof T) => void;
 }
 
 /**
- * useSort - Custom hook for sorting arrays of objects
+ * useSort - Custom hook for multi-column sorting arrays of objects
  * @param data - The array to sort
- * @param options - { initialSortBy, initialSortOrder }
- * @returns {Object} { sortedData, sortBy, sortOrder, handleSort }
+ * @param options - { initialSort }
+ * @returns {Object} { sortedData, sort, handleSort }
  */
 export default function useSort<T extends Record<string, any>>(
   data: T[],
@@ -27,54 +30,60 @@ export default function useSort<T extends Record<string, any>>(
   if (!Array.isArray(data) || data.length === 0) {
     return {
       sortedData: [],
-      sortBy: "" as keyof T,
-      sortOrder: "asc",
+      sort: [],
       handleSort: () => {},
     };
   }
 
-  const { initialSortBy, initialSortOrder = "asc" } = options;
-  const [sortBy, setSortBy] = useState<keyof T>(
-    initialSortBy ?? (Object.keys(data[0] ?? {})[0] as keyof T)
+  const defaultColumn = Object.keys(data[0] ?? {})[0] as keyof T;
+  const [sort, setSort] = useState<SortColumn<T>[]>(
+    options.initialSort && options.initialSort.length > 0
+      ? options.initialSort
+      : [{ column: defaultColumn, order: "asc" }]
   );
-  const [sortOrder, setSortOrder] = useState<SortOrder>(initialSortOrder);
 
   // Handler for sorting column
-  const handleSort = useCallback(
-    (column: keyof T) => {
-      if (sortBy === column) {
-        setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
+  const handleSort = useCallback((column: keyof T) => {
+    setSort((prevSort) => {
+      const existing = prevSort.find((s) => s.column === column);
+      if (existing) {
+        // Toggle order and move to front
+        const newOrder = existing.order === "asc" ? "desc" : "asc";
+        return [
+          { column, order: newOrder },
+          ...prevSort.filter((s) => s.column !== column),
+        ];
       } else {
-        setSortBy(column);
-        setSortOrder("asc");
+        // Add new column to front, keep others
+        return [{ column, order: "asc" }, ...prevSort];
       }
-    },
-    [sortBy]
-  );
+    });
+  }, []);
 
   // Memoized sorted data
   const sortedData = useMemo(() => {
     if (!Array.isArray(data)) return [];
     return [...data].sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
+      for (const { column, order } of sort) {
+        const aValue = a[column];
+        const bValue = b[column];
 
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortOrder === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+        if (typeof aValue === "string" && typeof bValue === "string") {
+          const cmp = aValue.localeCompare(bValue);
+          if (cmp !== 0) return order === "asc" ? cmp : -cmp;
+        } else if (typeof aValue === "number" && typeof bValue === "number") {
+          if (aValue !== bValue)
+            return order === "asc" ? aValue - bValue : bValue - aValue;
+        }
+        // Add more type checks if needed
       }
       return 0;
     });
-  }, [data, sortBy, sortOrder]);
+  }, [data, sort]);
 
   return {
     sortedData,
-    sortBy,
-    sortOrder,
+    sort,
     handleSort,
   };
 }
