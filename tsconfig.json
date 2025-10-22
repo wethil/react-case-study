@@ -20,7 +20,8 @@
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@assets/*": ["src/assets/*"],
-      "@types/*": ["src/types/*"]
+      "@types/*": ["src/types/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src", "vite-env.d.ts"],
