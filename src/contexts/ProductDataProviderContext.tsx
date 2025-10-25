@@ -1,7 +1,9 @@
 import React, { createContext, useContext } from "react";
 import type { ProductDataService } from "@/services/ProductDataService";
 
-const ProductDataContext = createContext<ProductDataService | null>(null);
+export const ProductDataContext = createContext<ProductDataService | null>(
+  null
+);
 
 export const ProductDataProviderContext: React.FC<{
   service: ProductDataService;
