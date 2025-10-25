@@ -51,6 +51,7 @@ const RAW_RUNTIME_STATE =
           ["postcss", "npm:8.5.6"],\
           ["react", "npm:19.2.0"],\
           ["react-dom", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:19.2.0"],\
+          ["react-error-boundary", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:6.0.0"],\
           ["react-router-dom", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:7.9.4"],\
           ["react-takehome-case", "workspace:."],\
           ["tailwindcss", "npm:4.1.15"],\
@@ -4154,6 +4155,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["react-error-boundary", [\
+      ["npm:6.0.0", {\
+        "packageLocation": "../../.yarn/berry/cache/react-error-boundary-npm-6.0.0-66eefd4679-10c0.zip/node_modules/react-error-boundary/",\
+        "packageDependencies": [\
+          ["react-error-boundary", "npm:6.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:6.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/react-error-boundary-virtual-c40869cae9/3/.yarn/berry/cache/react-error-boundary-npm-6.0.0-66eefd4679-10c0.zip/node_modules/react-error-boundary/",\
+        "packageDependencies": [\
+          ["@babel/runtime", "npm:7.28.4"],\
+          ["@types/react", "npm:19.2.2"],\
+          ["react", "npm:19.2.0"],\
+          ["react-error-boundary", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:6.0.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["react-is", [\
       ["npm:17.0.2", {\
         "packageLocation": "../../.yarn/berry/cache/react-is-npm-17.0.2-091bbb8db6-10c0.zip/node_modules/react-is/",\
@@ -4261,6 +4285,7 @@ const RAW_RUNTIME_STATE =
           ["postcss", "npm:8.5.6"],\
           ["react", "npm:19.2.0"],\
           ["react-dom", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:19.2.0"],\
+          ["react-error-boundary", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:6.0.0"],\
           ["react-router-dom", "virtual:69df287eee6ebf18d933c3e833f6c93c9df00a477241055aaae92814ba9c4dd687ecd6ab9fe74c06c6b9412181722c021add498fc937c14e7433ad9ce487657a#npm:7.9.4"],\
           ["react-takehome-case", "workspace:."],\
           ["tailwindcss", "npm:4.1.15"],\
