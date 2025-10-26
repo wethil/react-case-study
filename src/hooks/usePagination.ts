@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 // Interface for pagination options (ISP: clients depend only on needed properties)
 interface PaginationOptions {
@@ -9,36 +9,38 @@ interface PaginationOptions {
 // Hook for client-side pagination (SRP: handles only pagination logic)
 export function usePagination<T>(items: T[], options: PaginationOptions = {}) {
   const { itemsPerPage = 10, initialPage = 1 } = options;
-  const [currentPage, setCurrentPage] = useState(() => {
-    // Ensure initialPage is within bounds
-    const totalPages = Math.max(1, Math.ceil(items.length / itemsPerPage));
-    return Math.min(Math.max(initialPage, 1), totalPages);
-  });
-
-  // Reset to initialPage when items change (e.g., due to filtering/sorting)
-  useEffect(() => {
-    const totalPages = Math.max(1, Math.ceil(items.length / itemsPerPage));
-    setCurrentPage(Math.min(Math.max(initialPage, 1), totalPages));
-  }, [items, initialPage, itemsPerPage]);
 
   const totalPages = useMemo(
-    () => Math.ceil(items.length / itemsPerPage),
+    () => Math.max(1, Math.ceil(items.length / itemsPerPage)),
     [items.length, itemsPerPage]
   );
+
+  // Store the requested page, but clamp it to valid bounds in render
+  const [requestedPage, setRequestedPage] = useState(initialPage);
+
+  // Clamp the current page to valid bounds
+  const currentPage = useMemo(() => {
+    if (requestedPage < 1) return 1;
+    if (requestedPage > totalPages) return totalPages;
+    return requestedPage;
+  }, [requestedPage, totalPages]);
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return items.slice(startIndex, startIndex + itemsPerPage);
   }, [items, currentPage, itemsPerPage]);
 
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
+  const goToPage = useCallback((page: number) => {
+    setRequestedPage(page);
+  }, []);
 
-  const goToNext = () => goToPage(currentPage + 1);
-  const goToPrevious = () => goToPage(currentPage - 1);
+  const goToNext = useCallback(() => {
+    setRequestedPage((prev) => prev + 1);
+  }, []);
+
+  const goToPrevious = useCallback(() => {
+    setRequestedPage((prev) => prev - 1);
+  }, []);
 
   const hasNext = currentPage < totalPages;
   const hasPrevious = currentPage > 1;

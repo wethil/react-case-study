@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { ProductDataContext } from "@/contexts/ProductDataProviderContext";
+import { ProductDataContext } from "@/contexts/ProductDataContext";
 import Resource from "@/utils/createResource";
 import { Product } from "@/types/products.types";
 
@@ -11,7 +11,7 @@ export interface IResourceCache {
   clear(): void;
 }
 
-class ResourceCache implements IResourceCache {
+export class ResourceCache implements IResourceCache {
   private cache: Map<string, Resource<ProductResource>> = new Map();
   get(key: string) {
     return this.cache.get(key);

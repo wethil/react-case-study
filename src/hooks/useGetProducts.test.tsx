@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import {
   render,
   renderHook,
@@ -7,10 +7,14 @@ import {
   act,
 } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { ProductDataContext } from "@/contexts/ProductDataProviderContext";
+import { ProductDataContext } from "@/contexts/ProductDataContext";
 import { Product } from "@/types/products.types";
-import useGetProducts, { IResourceCache } from "./useGetProducts";
+import useGetProducts, {
+  IResourceCache,
+  ResourceCache,
+} from "./useGetProducts";
 import { ErrorBoundary } from "react-error-boundary";
+import type { ProductResponse } from "@/types/products.types";
 
 let testCache: IResourceCache;
 
@@ -33,18 +37,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Create a fresh cache for each test
-const createTestCache = () => {
-  let store: Record<string, any> = {};
-  return {
-    get: (key: string) => store[key],
-    set: (key: string, value: any) => {
-      store[key] = value;
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-};
+const createTestCache = () => new ResourceCache();
 
 // Test component for Suspense and ErrorBoundary tests
 const ProductsList: React.FC<{ params?: Record<string, unknown> }> = ({
@@ -66,18 +59,12 @@ const ProductsList: React.FC<{ params?: Record<string, unknown> }> = ({
 };
 
 describe("useGetProducts", () => {
-  let resolvePromise: (value: any) => void;
-  let rejectPromise: (reason?: any) => void;
-
   beforeEach(() => {
     vi.clearAllMocks();
     vi.clearAllMocks();
     testCache = createTestCache();
     // Create controllable promise for Suspense/Error tests
-    const controllablePromise = new Promise((res, rej) => {
-      resolvePromise = res;
-      rejectPromise = rej;
-    });
+    const controllablePromise = new Promise(() => {});
     mockGetProducts.mockReturnValue(controllablePromise);
   });
 
@@ -159,16 +146,14 @@ describe("useGetProducts", () => {
 });
 
 describe("useGetProducts Error and Suspense Handling", () => {
-  let resolvePromise: (value: any) => void;
-  let rejectPromise: (reason?: any) => void;
+  let resolvePromise: (value: ProductResponse) => void;
 
   beforeEach(() => {
     vi.clearAllMocks();
     testCache = createTestCache();
     // Create controllable promise for Suspense/Error tests
-    const controllablePromise = new Promise((res, rej) => {
+    const controllablePromise = new Promise((res) => {
       resolvePromise = res;
-      rejectPromise = rej;
     });
     mockGetProducts.mockReturnValue(controllablePromise);
   });
@@ -203,22 +188,11 @@ describe("useGetProducts Error and Suspense Handling", () => {
     const errorSpy = vi.fn();
 
     // Create a pending promise and expose rejectPromise
-    let rejectPromise: (reason?: any) => void;
+    let rejectPromise: (reason?: Error) => void;
     const pendingPromise = new Promise((_, rej) => {
       rejectPromise = rej;
     });
     mockGetProducts.mockReturnValue(pendingPromise);
-
-    // Use a fresh cache instance
-    const cache = {
-      store: {} as Record<string, any>,
-      get(key: string) {
-        return this.store[key];
-      },
-      set(key: string, value: any) {
-        this.store[key] = value;
-      },
-    };
 
     render(
       <ProductDataContext.Provider value={mockService}>

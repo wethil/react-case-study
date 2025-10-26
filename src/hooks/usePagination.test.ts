@@ -41,7 +41,7 @@ describe("usePagination", () => {
     act(() => result.current.goToPrevious());
     expect(result.current.currentPage).toBe(1);
     act(() => result.current.goToPage(99));
-    expect(result.current.currentPage).toBe(1);
+    expect(result.current.currentPage).toBe(3);
   });
 
   it("resets to page 1 when items change", () => {
