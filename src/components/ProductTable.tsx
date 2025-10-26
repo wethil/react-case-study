@@ -1,12 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Product } from "@/types/products.types";
-import type { JSX } from "react";
-
-type SortColumn = keyof Pick<Product, "name" | "price">;
+import type { SortColumn, SortState } from "@/types/table.types";
+import SortArrow from "@/components/SortArrow";
 
 interface ProductTableProps {
   products: Product[];
-  sort: { column: SortColumn; order: "asc" | "desc" }[];
+  sort: SortState;
   onSort: (column: SortColumn) => void;
 }
 
@@ -15,20 +14,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
   sort,
   onSort,
 }) => {
-  const getSortArrow = useMemo(
-    () =>
-      (column: SortColumn): JSX.Element | null => {
-        const sortCol = sort.find((s) => s.column === column);
-        if (!sortCol) return null;
-        return (
-          <span className="ml-1 transition-transform duration-200">
-            {sortCol.order === "asc" ? "▲" : "▼"}
-          </span>
-        );
-      },
-    [sort]
-  );
-
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden transition-shadow duration-200 hover:shadow-lg">
       <div className="overflow-x-auto">
@@ -52,7 +37,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 onKeyDown={(e) => e.key === "Enter" && onSort("name")}
               >
                 Product Name
-                {getSortArrow("name")}
+                <SortArrow column="name" sort={sort} />
               </th>
               <th
                 className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -73,7 +58,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 onKeyDown={(e) => e.key === "Enter" && onSort("price")}
               >
                 Price
-                {getSortArrow("price")}
+                <SortArrow column="price" sort={sort} />
               </th>
               <th
                 className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -130,5 +115,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
     </div>
   );
 };
+
+ProductTable.displayName = "ProductTable";
 
 export default ProductTable;

@@ -8,7 +8,7 @@ import Footer from "@components/Footer.tsx";
 import { ProductDataProviderContext } from "@/contexts/ProductDataProviderContext.tsx";
 import MockProductDataService from "@services/MockProductDataService";
 
-interface AppProps {}
+type AppProps = object;
 
 const App: React.FC<AppProps> = () => {
   const [currentPage, setCurrentPage] = useState("products");

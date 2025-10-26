@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from "react";
+import React, { useCallback, useMemo } from "react";
 import useSort from "@/hooks/useSort";
 import useGetProducts from "@hooks/useGetProducts";
 import useCategoryFilter from "@/hooks/useCategoryFilter";
@@ -17,11 +17,10 @@ type CategoryOption = {
 // Type for sort column (restrict to known keys)
 type SortColumn = keyof Pick<Product, "name" | "price">;
 
-const Products = memo(() => {
+const Products: React.FC = () => {
   // Fetch all products first (empty params for client-side filtering)
   const params = useMemo(() => ({}), []);
-  const { products, total } = useGetProducts(params);
-  // This will suspend while loading, and return data when ready
+  const { products } = useGetProducts(params);
 
   // Use the extracted hook for category filtering (client-side)
   const {
@@ -50,30 +49,28 @@ const Products = memo(() => {
   } = usePagination(sortedData, { itemsPerPage: 10 });
 
   // Handler for select change
-  const handleCategoryChange = useMemo(
-    () => (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategoryChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCategory(event.target.value);
     },
     [setSelectedCategory]
   );
 
   // Handler for sort click
-  const handleSortClick = useMemo(
-    () => (column: SortColumn) => {
+  const handleSortClick = useCallback(
+    (column: SortColumn) => {
       handleSort(column);
     },
     [handleSort]
   );
 
   // Handler for page navigation
-  const handlePageClick = useMemo(
-    () => (page: number) => {
+  const handlePageClick = useCallback(
+    (page: number) => {
       goToPage(page);
     },
     [goToPage]
   );
-
-  console.log("Total products:", total);
 
   // Typed category options
   const categoryOptions: CategoryOption[] = useMemo(
@@ -149,8 +146,6 @@ const Products = memo(() => {
       />
     </div>
   );
-});
-
-Products.displayName = "Products";
+};
 
 export default Products;

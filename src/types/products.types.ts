@@ -5,3 +5,8 @@ export type Product = {
   price: number;
   stock: number;
 };
+
+export type ProductResponse = {
+  products: Product[];
+  total: number;
+};

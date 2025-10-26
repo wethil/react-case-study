@@ -50,7 +50,7 @@ const About = () => {
                 <li>• Add Previous/Next buttons and page number indicators</li>
                 <li>
                   • Show current page, total pages, and items range (e.g.,
-                  "Showing 1-10 of 15")
+                  &quot;Showing 1-10 of 15&quot;)
                 </li>
                 <li>
                   • Structure code to allow easy transition to server-side
@@ -95,8 +95,8 @@ const About = () => {
             <div className="border border-gray-200 rounded p-4">
               <h4 className="font-semibold text-gray-900 mb-2">Scalability</h4>
               <p className="text-sm text-gray-700">
-                Architecture that's easy to extend, reusable hooks/components,
-                future-proof design
+                Architecture that&apos;s easy to extend, reusable
+                hooks/components, future-proof design
               </p>
             </div>
             <div className="border border-gray-200 rounded p-4">
@@ -160,7 +160,8 @@ const About = () => {
               round
             </li>
             <li>
-              • Document any trade-offs or areas you'd improve with more time
+              • Document any trade-offs or areas you&apos;d improve with more
+              time
             </li>
           </ul>
         </div>
@@ -169,4 +170,5 @@ const About = () => {
   );
 };
 
+About.displayName = "About";
 export default About;

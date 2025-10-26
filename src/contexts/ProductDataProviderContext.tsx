@@ -1,9 +1,5 @@
-import React, { createContext, useContext } from "react";
 import type { ProductDataService } from "@/services/ProductDataService";
-
-export const ProductDataContext = createContext<ProductDataService | null>(
-  null
-);
+import { ProductDataContext } from "@/contexts/ProductDataContext";
 
 export const ProductDataProviderContext: React.FC<{
   service: ProductDataService;
@@ -13,9 +9,3 @@ export const ProductDataProviderContext: React.FC<{
     {children}
   </ProductDataContext.Provider>
 );
-
-export function useProductDataService() {
-  const ctx = useContext(ProductDataContext);
-  if (!ctx) throw new Error("Provider not found");
-  return ctx;
-}
