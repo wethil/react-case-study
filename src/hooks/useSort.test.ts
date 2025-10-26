@@ -81,7 +81,7 @@ describe("useSort", () => {
   });
 
   it("returns empty array if data is not array", () => {
-    // @ts-expect-error
+    // @ts-expect-error :Testing invalid data input
     const { result } = renderHook(() => useSort(undefined));
     expect(result.current.sortedData).toEqual([]);
   });

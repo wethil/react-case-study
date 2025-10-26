@@ -23,19 +23,14 @@ interface UseSortReturn<T> {
  * @param options - { initialSort }
  * @returns {Object} { sortedData, sort, handleSort }
  */
-export default function useSort<T extends Record<string, any>>(
+export default function useSort<T extends Record<string, unknown>>(
   data: T[],
   options: UseSortOptions<T> = {}
 ): UseSortReturn<T> {
-  if (!Array.isArray(data) || data.length === 0) {
-    return {
-      sortedData: [],
-      sort: [],
-      handleSort: () => {},
-    };
-  }
-
-  const defaultColumn = Object.keys(data[0] ?? {})[0] as keyof T;
+  const isArrayData = Array.isArray(data);
+  const defaultColumn = isArrayData
+    ? (Object.keys(data[0] ?? {})?.[0] as keyof T)
+    : "id";
   const [sort, setSort] = useState<SortColumn<T>[]>(
     options.initialSort && options.initialSort.length > 0
       ? options.initialSort
@@ -62,7 +57,7 @@ export default function useSort<T extends Record<string, any>>(
 
   // Memoized sorted data
   const sortedData = useMemo(() => {
-    if (!Array.isArray(data)) return [];
+    if (!Array.isArray(data) || data.length === 0) return [];
     return [...data].sort((a, b) => {
       for (const { column, order } of sort) {
         const aValue = a[column];
@@ -80,6 +75,14 @@ export default function useSort<T extends Record<string, any>>(
       return 0;
     });
   }, [data, sort]);
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return {
+      sortedData: [],
+      sort,
+      handleSort,
+    };
+  }
 
   return {
     sortedData,
