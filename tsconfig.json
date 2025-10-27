@@ -21,7 +21,9 @@
       "@hooks/*": ["src/hooks/*"],
       "@assets/*": ["src/assets/*"],
       "@types/*": ["src/types/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@ui/*": ["src/ui/*"],
+      "@contexts/*": ["src/contexts/*"]
     }
   },
   "include": ["src", "vite-env.d.ts"],
