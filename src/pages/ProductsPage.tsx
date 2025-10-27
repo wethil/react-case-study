@@ -35,7 +35,13 @@ const columns: TableColumn<Product>[] = [
 
 const Products: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const params = useMemo<Record<string, unknown>>(() => ({}), []);
+  const params = useMemo<Record<string, unknown>>(
+    () => ({
+      // Additional params can be added here in the future
+      // e.g., filters, sort options from URL, and pagination
+    }),
+    []
+  );
   const { products } = useGetProducts(params);
 
   const {
