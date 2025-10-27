@@ -24,10 +24,8 @@ const MockProductDataService: ProductDataService = {
     let filtered = products as Product[];
     const filterStrategy: IFilterStrategy = new CategoryFilter(); // Can inject different strategies
     filtered = filterStrategy.filter(filtered, params || {});
-    // Use shorter delay for tests to avoid slow Suspense
-    const delay = process.env.NODE_ENV === "test" ? 10 : 30;
+    const delay = process.env.NODE_ENV === "test" ? 10 : 200;
     await new Promise((resolve) => setTimeout(resolve, delay));
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
     return { products: filtered, total: filtered.length };
   },
 };
