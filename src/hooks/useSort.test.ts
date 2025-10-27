@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import useSort from "./useSort.ts";
+import useSort from "./useSort";
 
 type TestProduct = {
   id: number;
@@ -32,7 +32,7 @@ describe("useSort", () => {
     expect(result.current.sortedData.map((p) => p.price)).toEqual([3, 2, 1]);
   });
 
-  it("changes sort order when handleSort is called on same column", () => {
+  it("toggles sort order for primary column", () => {
     const { result } = renderHook(() =>
       useSort(products, { initialSort: [{ column: "name", order: "asc" }] })
     );
@@ -59,24 +59,63 @@ describe("useSort", () => {
     expect(result.current.sortedData.map((p) => p.price)).toEqual([1, 2, 3]);
   });
 
-  it("supports multi-column sorting", () => {
-    const multiProducts = [
+  it("supports multi-column sorting and toggling with multi argument", () => {
+    const multiProducts: TestProduct[] = [
       { id: 1, name: "Banana", price: 2 },
       { id: 2, name: "Apple", price: 2 },
       { id: 3, name: "Carrot", price: 1 },
     ];
     const { result } = renderHook(() =>
       useSort(multiProducts, {
-        initialSort: [
-          { column: "price", order: "asc" },
-          { column: "name", order: "asc" },
-        ],
+        initialSort: [{ column: "price", order: "asc" }],
       })
     );
+    // Add 'name' as secondary sort (simulate shift-click)
+    act(() => {
+      result.current.handleSort("name", true);
+    });
+    expect(result.current.sort).toEqual([
+      { column: "price", order: "asc" },
+      { column: "name", order: "asc" },
+    ]);
     expect(result.current.sortedData.map((p) => p.name)).toEqual([
       "Carrot", // price 1
       "Apple", // price 2, name A
       "Banana", // price 2, name B
+    ]);
+    // Toggle secondary sort order (simulate shift-click again)
+    act(() => {
+      result.current.handleSort("name", true);
+    });
+    expect(result.current.sort).toEqual([
+      { column: "price", order: "asc" },
+      { column: "name", order: "desc" },
+    ]);
+    expect(result.current.sortedData.map((p) => p.name)).toEqual([
+      "Carrot", // price 1
+      "Banana", // price 2, name B
+      "Apple", // price 2, name A
+    ]);
+  });
+
+  it("moves column to front and resets order to asc on normal click", () => {
+    const { result } = renderHook(() =>
+      useSort(products, {
+        initialSort: [
+          { column: "price", order: "desc" },
+          { column: "name", order: "asc" },
+        ],
+      })
+    );
+    act(() => {
+      result.current.handleSort("name");
+    });
+    expect(result.current.sort[0]).toEqual({ column: "name", order: "asc" });
+    expect(result.current.sort[1]).toEqual({ column: "price", order: "desc" });
+    expect(result.current.sortedData.map((p) => p.name)).toEqual([
+      "Apple",
+      "Banana",
+      "Carrot",
     ]);
   });
 

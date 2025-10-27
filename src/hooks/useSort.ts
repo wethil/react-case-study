@@ -14,7 +14,7 @@ interface UseSortOptions<T> {
 interface UseSortReturn<T> {
   sortedData: T[];
   sort: SortColumn<T>[];
-  handleSort: (column: keyof T) => void;
+  handleSort: (column: keyof T, multi?: boolean) => void;
 }
 
 /**
@@ -38,20 +38,42 @@ export default function useSort<T extends Record<string, unknown>>(
   );
 
   // Handler for sorting column
-  const handleSort = useCallback((column: keyof T) => {
+  const handleSort = useCallback((column: keyof T, multi?: boolean) => {
     setSort((prevSort) => {
-      const existing = prevSort.find((s) => s.column === column);
-      if (existing) {
-        // Toggle order and move to front
-        const newOrder = existing.order === "asc" ? "desc" : "asc";
-        return [
-          { column, order: newOrder },
-          ...prevSort.filter((s) => s.column !== column),
-        ];
-      } else {
-        // Add new column to front, keep others
-        return [{ column, order: "asc" }, ...prevSort];
+      const existingIndex = prevSort.findIndex((s) => s.column === column);
+
+      // Multi-column sorting (shift-click)
+      if (multi) {
+        if (existingIndex >= 0) {
+          // Toggle order for existing column
+          const updated = [...prevSort];
+          updated[existingIndex] = {
+            column,
+            order: updated[existingIndex].order === "asc" ? "desc" : "asc",
+          };
+          return updated;
+        } else {
+          // Add new column to sort stack
+          return [...prevSort, { column, order: "asc" }];
+        }
       }
+
+      // Single-column sorting (normal click)
+      if (existingIndex === 0) {
+        // Toggle order for primary column
+        return [
+          {
+            column,
+            order: prevSort[0].order === "asc" ? "desc" : "asc",
+          },
+          ...prevSort.slice(1),
+        ];
+      }
+      // Move column to front, set to ascending
+      return [
+        { column, order: "asc" },
+        ...prevSort.filter((s) => s.column !== column),
+      ];
     });
   }, []);
 
