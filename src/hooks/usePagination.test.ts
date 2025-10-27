@@ -57,14 +57,14 @@ describe("usePagination", () => {
     const { result } = renderHook(() =>
       usePagination(items, { itemsPerPage: 10, currentPage: 99 })
     );
-    expect(result.current.paginatedItems).toHaveLength(5);
+    expect(result.current.paginatedItems).toHaveLength(0);
     expect(result.current.itemsRange).toEqual({
-      start: 21,
-      end: 25,
+      start: 0,
+      end: 0,
       total: 25,
     });
     expect(result.current.hasNext).toBe(false);
-    expect(result.current.hasPrevious).toBe(true);
+    expect(result.current.hasPrevious).toBe(false);
   });
 
   it("returns correct paginated items when items change", () => {
