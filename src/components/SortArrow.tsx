@@ -1,20 +1,32 @@
-import type { JSX } from "react";
+import React from "react";
 import type { SortColumn, SortState } from "@/types/table.types";
 
-export default function SortArrow({
-  column,
-  sort,
-}: {
+/**
+ * Renders a sort arrow indicator for the given column and sort state.
+ * Ensures touch-friendly tap targets and accessibility.
+ */
+export interface SortArrowProps {
   column: SortColumn;
   sort: SortState;
-}): JSX.Element | null {
+}
+
+const SortArrow: React.FC<SortArrowProps> = ({ column, sort }) => {
   const sortCol = sort.find((s) => s.column === column);
   if (!sortCol) return null;
   return (
-    <span className="ml-1 transition-transform duration-200">
+    <span
+      className="ml-1 transition-transform duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center"
+      aria-label={
+        sortCol.order === "asc" ? "Sorted ascending" : "Sorted descending"
+      }
+      role="img"
+      tabIndex={0}
+    >
       {sortCol.order === "asc" ? "▲" : "▼"}
     </span>
   );
-}
+};
 
 SortArrow.displayName = "SortArrow";
+
+export default SortArrow;
