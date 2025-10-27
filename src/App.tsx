@@ -15,6 +15,10 @@ import ErrorPage from "@pages/ErrorPage";
 import { ErrorBoundary } from "react-error-boundary";
 import { getRouteMeta } from "@/utils/getRoute.ts";
 import { routes } from "@/routes.ts";
+import ErrorLogger from "@utils/ErrorLogger";
+import ConsoleLogger from "@utils/ConsoleLogger";
+
+const errorLogger = new ErrorLogger(new ConsoleLogger());
 
 // Lazy load pages for code-splitting
 const ProductsPage = React.lazy(() => import("@pages/ProductsPage"));
@@ -77,7 +81,10 @@ const AppContent: React.FC<{
             <Route
               path={routes.products.path}
               element={
-                <ErrorBoundary FallbackComponent={ErrorPage}>
+                <ErrorBoundary
+                  FallbackComponent={ErrorPage}
+                  onError={(error, info) => errorLogger.log(error, info)}
+                >
                   <Suspense fallback={<ProductsPageSkeleton />}>
                     <ProductsPage />
                   </Suspense>
