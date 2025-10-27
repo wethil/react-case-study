@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import useSort from "@/hooks/useSort";
 import useGetProducts from "@hooks/useGetProducts";
 import useCategoryFilter from "@/hooks/useCategoryFilter";
@@ -33,6 +34,7 @@ const columns: TableColumn<Product>[] = [
 ];
 
 const Products: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const params = useMemo<Record<string, unknown>>(() => ({}), []);
   const { products } = useGetProducts(params);
 
@@ -47,17 +49,10 @@ const Products: React.FC = () => {
     initialSort: [{ column: "name", order: "asc" }],
   });
 
-  const {
-    currentPage,
-    totalPages,
-    paginatedItems,
-    goToPage,
-    goToNext,
-    goToPrevious,
-    hasNext,
-    hasPrevious,
-    itemsRange,
-  } = usePagination<Product>(sortedData, { itemsPerPage: 10 });
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const { totalPages, paginatedItems, hasNext, hasPrevious, itemsRange } =
+    usePagination<Product>(sortedData, { itemsPerPage: 10, currentPage });
 
   const handleSortClick = useCallback(
     (column: SortColumn, multi?: boolean) => {
@@ -68,9 +63,9 @@ const Products: React.FC = () => {
 
   const handlePageClick = useCallback(
     (page: number) => {
-      goToPage(page);
+      setSearchParams({ page: String(page) });
     },
-    [goToPage]
+    [setSearchParams]
   );
 
   const categoryOptions: CategoryOption[] = useMemo(
@@ -134,8 +129,8 @@ const Products: React.FC = () => {
         hasPrevious={hasPrevious}
         itemsRange={itemsRange}
         onPageChange={handlePageClick}
-        onNext={goToNext}
-        onPrevious={goToPrevious}
+        onNext={() => handlePageClick(currentPage + 1)}
+        onPrevious={() => handlePageClick(currentPage - 1)}
       />
     </div>
   );
