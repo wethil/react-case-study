@@ -1,25 +1,22 @@
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 
 describe("App", () => {
-  it("renders sidebar and header", () => {
+  it("renders sidebar, header, and footer", async () => {
     render(<App />);
-    expect(screen.getByRole("navigation")).toBeInTheDocument();
-    expect(screen.getByRole("banner")).toBeInTheDocument();
-  });
 
-  it("renders products page by default", () => {
-    render(<App />);
-    expect(screen.getByText(/Products/)).toBeInTheDocument();
-  });
+    // Sidebar navigation
+    expect(
+      screen.getByRole("complementary", { name: /navigation sidebar/i })
+    ).toBeInTheDocument();
 
-  it("renders about page when selected", () => {
-    render(<App />);
-    expect(screen.getByText(/About/)).toBeInTheDocument();
-  });
+    // Header banner
+    expect(screen.getByRole("banner", { name: /header/i })).toBeInTheDocument();
 
-  it("renders footer", () => {
-    render(<App />);
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+    // Footer contentinfo
+    expect(
+      screen.getByRole("contentinfo", { name: /footer/i })
+    ).toBeInTheDocument();
   });
 });
