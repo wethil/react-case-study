@@ -4,10 +4,11 @@ import Products from "@pages/ProductsPage.tsx";
 import About from "@pages/AboutPage.tsx";
 import Header from "@components/Header.tsx";
 import Footer from "@components/Footer.tsx";
-import ProductTableSkeleton from "@components/ProductTableSkeleton";
+import ProducPageSkeleton from "@pages/skeletons/ProductsPageSkeleton.tsx";
 import { ProductDataProviderContext } from "@/contexts/ProductDataProviderContext.tsx";
 import MockProductDataService from "@services/MockProductDataService";
-
+import ErrorPage from "@pages/ErrorPage";
+import { ErrorBoundary } from "react-error-boundary";
 type AppProps = object;
 
 const App: React.FC<AppProps> = () => {
@@ -44,9 +45,11 @@ const App: React.FC<AppProps> = () => {
 
           <main className="flex-1 overflow-y-auto">
             {currentPage === "products" && (
-              <Suspense fallback={<ProductTableSkeleton />}>
-                <Products />
-              </Suspense>
+              <ErrorBoundary FallbackComponent={ErrorPage}>
+                <Suspense fallback={<ProducPageSkeleton />}>
+                  <Products />
+                </Suspense>
+              </ErrorBoundary>
             )}
             {currentPage === "about" && <About />}
           </main>
