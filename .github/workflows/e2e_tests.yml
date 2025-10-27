@@ -1,4 +1,4 @@
-name: Run Vitest, Playwright E2E, Linter, and Type Checks
+name: Playwright E2E Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  test:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,17 +22,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      # - name: Run ESLint
-      #   run: yarn lint
-
-      # - name: Run TypeScript type checks
-      #   run: yarn tsc --noEmit
-
-      # - name: Run Vitest tests
-      #   run: yarn test:run
-
       - name: Install Playwright browsers
-        run: yarn playwright install
+        run: yarn playwright install --with-deps
 
       - name: Run Playwright E2E tests
         run: yarn playwright test
