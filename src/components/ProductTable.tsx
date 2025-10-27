@@ -1,6 +1,6 @@
 import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
-import TableHeader from "@ui/Table/Header";
-import TableRow from "@ui/Table/Row";
+import TableHeader from "@/ui/Table/TableHeader";
+import TableRow from "@/ui/Table/TableRow";
 
 interface ProductTableProps<T> {
   data: T[];
