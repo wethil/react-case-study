@@ -7,22 +7,34 @@ import ProductCard from "@/components/ProductCard";
 import ProductTable from "@/components/ProductTable";
 import Pagination from "@/components/Pagination";
 import { Product } from "@/types/products.types";
+import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
+import isNumber from "@/utils/isNumber";
 
-// Type for category options in select
 type CategoryOption = {
   value: string;
   label: string;
 };
 
-// Type for sort column (restrict to known keys)
-type SortColumn = keyof Pick<Product, "name" | "price">;
+const columns: TableColumn<Product>[] = [
+  { key: "name", label: "Product Name", sortable: true },
+  { key: "category", label: "Category" },
+  {
+    key: "price",
+    label: "Price",
+    sortable: true,
+    render: (value, _) => (isNumber(value) ? `$${value.toFixed(2)}` : ""),
+  },
+  {
+    key: "stock",
+    label: "Stock",
+    render: (value, _) => (isNumber(value) ? `${value} units` : ""),
+  },
+];
 
 const Products: React.FC = () => {
-  // Fetch all products first (empty params for client-side filtering)
-  const params = useMemo(() => ({}), []);
+  const params = useMemo<Record<string, unknown>>(() => ({}), []);
   const { products } = useGetProducts(params);
 
-  // Use the extracted hook for category filtering (client-side)
   const {
     selectedCategory,
     setSelectedCategory,
@@ -30,12 +42,10 @@ const Products: React.FC = () => {
     categories,
   } = useCategoryFilter(products);
 
-  // Use useSort for Product Name and Price columns
   const { sortedData, sort, handleSort } = useSort(filteredProducts, {
     initialSort: [{ column: "name", order: "asc" }],
   });
 
-  // Use usePagination for client-side pagination (10 per page)
   const {
     currentPage,
     totalPages,
@@ -46,9 +56,8 @@ const Products: React.FC = () => {
     hasNext,
     hasPrevious,
     itemsRange,
-  } = usePagination(sortedData, { itemsPerPage: 10 });
+  } = usePagination<Product>(sortedData, { itemsPerPage: 10 });
 
-  // Handler for select change
   const handleCategoryChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCategory(event.target.value);
@@ -56,7 +65,6 @@ const Products: React.FC = () => {
     [setSelectedCategory]
   );
 
-  // Handler for sort click
   const handleSortClick = useCallback(
     (column: SortColumn) => {
       handleSort(column);
@@ -64,7 +72,6 @@ const Products: React.FC = () => {
     [handleSort]
   );
 
-  // Handler for page navigation
   const handlePageClick = useCallback(
     (page: number) => {
       goToPage(page);
@@ -72,7 +79,6 @@ const Products: React.FC = () => {
     [goToPage]
   );
 
-  // Typed category options
   const categoryOptions: CategoryOption[] = useMemo(
     () =>
       categories.map((cat) => ({
@@ -103,7 +109,7 @@ const Products: React.FC = () => {
         <select
           value={selectedCategory}
           onChange={handleCategoryChange}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 transition-all duration-200"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white text-gray-900 transition-all duration-200"
           aria-describedby="filter-label"
         >
           {categoryOptions.map((option) => (
@@ -117,9 +123,11 @@ const Products: React.FC = () => {
       {/* Desktop and Tablet: Table Layout */}
       <div className="hidden md:block transition-opacity duration-300">
         <ProductTable
-          products={paginatedItems}
-          sort={sort as { column: SortColumn; order: "asc" | "desc" }[]}
+          data={paginatedItems}
+          columns={columns}
+          sort={sort as SortState}
           onSort={handleSortClick}
+          rowKey={(row: Product) => row.id}
         />
       </div>
 
@@ -147,5 +155,7 @@ const Products: React.FC = () => {
     </div>
   );
 };
+
+Products.displayName = "Products";
 
 export default Products;

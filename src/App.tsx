@@ -4,7 +4,7 @@ import Products from "@pages/ProductsPage.tsx";
 import About from "@pages/AboutPage.tsx";
 import Header from "@components/Header.tsx";
 import Footer from "@components/Footer.tsx";
-
+import ProductTableSkeleton from "@components/ProductTableSkeleton";
 import { ProductDataProviderContext } from "@/contexts/ProductDataProviderContext.tsx";
 import MockProductDataService from "@services/MockProductDataService";
 
@@ -44,7 +44,7 @@ const App: React.FC<AppProps> = () => {
 
           <main className="flex-1 overflow-y-auto">
             {currentPage === "products" && (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<ProductTableSkeleton />}>
                 <Products />
               </Suspense>
             )}
