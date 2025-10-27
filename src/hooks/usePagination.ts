@@ -15,6 +15,7 @@ export function usePagination<T>(items: T[], options: UsePaginationOptions) {
 
   const isOutOfBounds = currentPage < 1 || currentPage > totalPages;
 
+  // We wouldn't need to slice the items when fetching from backend by pages
   const paginatedItems = useMemo(() => {
     if (isOutOfBounds) return [];
     const start = (currentPage - 1) * itemsPerPage;
