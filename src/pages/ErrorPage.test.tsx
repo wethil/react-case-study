@@ -1,6 +1,25 @@
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { ErrorBoundary } from "react-error-boundary";
 import ErrorPage from "./ErrorPage";
-import { vi } from "vitest";
+
+const ErrorThrower: React.FC = () => {
+  throw new Error("Test error");
+};
+ErrorThrower.displayName = "ErrorThrower";
+
+describe("ErrorBoundary", () => {
+  it("renders ErrorPage when a child throws", () => {
+    render(
+      <ErrorBoundary FallbackComponent={ErrorPage}>
+        <ErrorThrower />
+      </ErrorBoundary>
+    );
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+  });
+});
+
 describe("ErrorPage", () => {
   it("renders error message", () => {
     render(<ErrorPage error={new Error("Test error")} />);
