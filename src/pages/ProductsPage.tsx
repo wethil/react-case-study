@@ -89,10 +89,7 @@ const Products: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 transition-all duration-300">
-      <header className="mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 transition-colors duration-200">
-          Products
-        </h2>
+      <header className="mb-5">
         <p className="text-gray-600 transition-colors duration-200">
           Manage your product inventory
         </p>
