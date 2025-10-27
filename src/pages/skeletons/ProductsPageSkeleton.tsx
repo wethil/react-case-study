@@ -9,7 +9,7 @@ import ProductCardSkeleton from "@components/skeletons/ProductCardSkeleton";
  */
 const ProductsPageSkeleton: React.FC = () => (
   <div className="p-4 sm:p-6 transition-all duration-300">
-    <header className="mb-6">
+    <header className="mb-6" aria-label="Loading products page">
       <div className="h-8 w-1/3 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse" />
       <div className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
     </header>

@@ -6,7 +6,13 @@ const FiltersSkeleton: React.FC = () => (
     aria-label="Loading filters"
   >
     {[...Array(3)].map((_, idx) => (
-      <div key={idx} className="flex flex-col">
+      <div
+        key={idx}
+        className="flex flex-col"
+        role="region"
+        aria-hidden="true"
+        data-testid="filters-skeleton-block"
+      >
         <div className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
         <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded" />
       </div>
