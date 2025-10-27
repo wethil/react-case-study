@@ -130,11 +130,16 @@ const App: React.FC<AppProps> = () => {
 
   return (
     <Providers>
-      <AppContent
-        isSidebarOpen={isSidebarOpen}
-        handleToggleSidebar={handleToggleSidebar}
-        handleCloseSidebar={handleCloseSidebar}
-      />
+      <ErrorBoundary
+        FallbackComponent={ErrorPage}
+        onError={(error, info) => errorLogger.log(error, info)}
+      >
+        <AppContent
+          isSidebarOpen={isSidebarOpen}
+          handleToggleSidebar={handleToggleSidebar}
+          handleCloseSidebar={handleCloseSidebar}
+        />
+      </ErrorBoundary>
     </Providers>
   );
 };
