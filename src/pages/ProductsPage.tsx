@@ -6,6 +6,7 @@ import { usePagination } from "@/hooks/usePagination";
 import ProductCard from "@/components/ProductCard";
 import ProductTable from "@/components/ProductTable";
 import Pagination from "@/components/Pagination";
+import Filters, { FilterConfig } from "@/components/Filters";
 import { Product } from "@/types/products.types";
 import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
 import isNumber from "@/utils/isNumber";
@@ -58,16 +59,9 @@ const Products: React.FC = () => {
     itemsRange,
   } = usePagination<Product>(sortedData, { itemsPerPage: 10 });
 
-  const handleCategoryChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedCategory(event.target.value);
-    },
-    [setSelectedCategory]
-  );
-
   const handleSortClick = useCallback(
-    (column: SortColumn) => {
-      handleSort(column);
+    (column: SortColumn, multi?: boolean) => {
+      handleSort(column as keyof Product, multi);
     },
     [handleSort]
   );
@@ -88,6 +82,16 @@ const Products: React.FC = () => {
     [categories]
   );
 
+  const categoryFilter: FilterConfig = {
+    name: "category",
+    label: "Filter by Category",
+    value: selectedCategory,
+    options: categoryOptions,
+    onChange: setSelectedCategory,
+  };
+
+  const filters: FilterConfig[] = [categoryFilter];
+
   return (
     <div className="p-4 sm:p-6 transition-all duration-300">
       <header className="mb-6">
@@ -99,26 +103,7 @@ const Products: React.FC = () => {
         </p>
       </header>
 
-      <section className="mb-6" aria-labelledby="filter-label">
-        <label
-          id="filter-label"
-          className="block text-sm font-medium text-gray-700 mb-2 transition-colors duration-200"
-        >
-          Filter by Category
-        </label>
-        <select
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white text-gray-900 transition-all duration-200"
-          aria-describedby="filter-label"
-        >
-          {categoryOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </section>
+      <Filters filters={filters} />
 
       {/* Desktop and Tablet: Table Layout */}
       <div className="hidden md:block transition-opacity duration-300">
