@@ -1,16 +1,17 @@
 import React, { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import useSort from "@/hooks/useSort";
+import useSort from "@hooks/useSort";
 import useGetProducts from "@hooks/useGetProducts";
-import useCategoryFilter from "@/hooks/useCategoryFilter";
-import { usePagination } from "@/hooks/usePagination";
-import ProductCard from "@/components/ProductCard";
-import ProductTable from "@/components/ProductTable";
-import Pagination from "@/components/Pagination";
-import Filters, { FilterConfig } from "@/components/Filters";
+import useCategoryFilter from "@hooks/useCategoryFilter";
+import { usePagination } from "@hooks/usePagination";
+import ProductCard from "@components/ProductCard";
+import ProductTable from "@components/ProductTable";
+import Pagination from "@components/Pagination";
+import ProductsEmptyState from "@components/ProductsEmptyState";
+import Filters, { FilterConfig } from "@components/Filters";
 import { Product } from "@/types/products.types";
 import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
-import isNumber from "@/utils/isNumber";
+import isNumber from "@utils/isNumber";
 
 type CategoryOption = {
   value: string;
@@ -103,38 +104,45 @@ const Products: React.FC = () => {
 
       <Filters filters={filters} />
 
-      {/* Desktop and Tablet: Table Layout */}
-      <div className="hidden md:block transition-opacity duration-300">
-        <ProductTable
-          data={paginatedItems}
-          columns={columns}
-          sort={sort as SortState}
-          onSort={handleSortClick}
-          rowKey={(row: Product) => row.id}
-        />
-      </div>
-
-      {/* Mobile: Card Layout */}
-      <div
-        className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-300"
-        role="list"
-        aria-label="Products list"
-      >
-        {paginatedItems.map((product: Product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        hasNext={hasNext}
-        hasPrevious={hasPrevious}
-        itemsRange={itemsRange}
-        onPageChange={handlePageClick}
-        onNext={() => handlePageClick(currentPage + 1)}
-        onPrevious={() => handlePageClick(currentPage - 1)}
-      />
+      {paginatedItems.length === 0 ? (
+        <ProductsEmptyState />
+      ) : (
+        <>
+          {" "}
+          {/* Desktop and Tablet: Table Layout */}
+          <div className="hidden md:block transition-opacity duration-300">
+            <ProductTable
+              data={
+                paginatedItems.length === 0 ? [] : (paginatedItems as Product[])
+              }
+              columns={columns}
+              sort={sort as SortState}
+              onSort={handleSortClick}
+              rowKey={(row: Product) => row.id}
+            />
+          </div>
+          {/* Mobile: Card Layout */}
+          <div
+            className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-300"
+            role="list"
+            aria-label="Products list"
+          >
+            {paginatedItems.map((product: Product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            hasNext={hasNext}
+            hasPrevious={hasPrevious}
+            itemsRange={itemsRange}
+            onPageChange={handlePageClick}
+            onNext={() => handlePageClick(currentPage + 1)}
+            onPrevious={() => handlePageClick(currentPage - 1)}
+          />
+        </>
+      )}
     </div>
   );
 };
