@@ -8,6 +8,7 @@ interface ProductTableProps<T> {
   sort: SortState;
   onSort: (column: SortColumn) => void;
   rowKey: (row: T) => string | number;
+  sortableColumns?: TableColumn<T>[];
 }
 
 const ProductTable = <T,>({

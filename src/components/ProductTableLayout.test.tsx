@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import ProductTable from "./ProductTable";
+import ProductTableLayout from "./ProductTableLayout";
 import { Product } from "@/types/products.types";
 import { TableColumn, SortState } from "@/types/table.types";
 
-describe("ProductTable", () => {
+describe("ProductTableLayout", () => {
   const products: Product[] = [
     { id: 1, name: "A", category: "Cat", price: 1, stock: 1 },
     { id: 2, name: "B", category: "Cat", price: 2, stock: 2 },
@@ -18,7 +18,7 @@ describe("ProductTable", () => {
 
   it("renders table rows", () => {
     render(
-      <ProductTable
+      <ProductTableLayout
         data={products}
         columns={columns}
         sort={sort}
