@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 /**
  * MobileSortControls displays a touch-friendly button group for sorting.
@@ -64,7 +65,11 @@ const MobileSortControls = <T,>({
               {active && (
                 <>
                   <span className="ml-2" aria-hidden="true">
-                    {active.order === "asc" ? "▲" : "▼"}
+                    {active.order === "asc" ? (
+                      <ChevronUp size={16} aria-label="Ascending" />
+                    ) : (
+                      <ChevronDown size={16} aria-label="Descending" />
+                    )}
                   </span>
                   {sort.length > 1 && (
                     <span
