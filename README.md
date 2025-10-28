@@ -163,6 +163,9 @@ On mobile devices or smaller screens, users can activate multi-column sorting us
 
 - More tests can be added for additional edge cases by creating a mock server for the project.
 
+---
+
+````markdown
 # Senior Frontend Developer - Take-Home Challenge
 
 ## 🎯 Overview
@@ -172,6 +175,35 @@ Welcome to the ProductsUp take-home challenge! This exercise is designed to eval
 **Time Allocation:** 3-4 hours
 
 ## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd react-takehome-case
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+````
+
+The app will be available at `http://localhost:5173`
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
 ## 📋 Challenge Requirements
 
@@ -347,22 +379,22 @@ src/
 
 ## ❓ FAQ
 
-**Q: Can I use additional libraries?**
+**Q: Can I use additional libraries?**  
 A: Stick to what's provided. We want to see your core React and Tailwind skills.
 
-**Q: Should I add TypeScript?**
+**Q: Should I add TypeScript?**  
 A: Optional but appreciated. The codebase is JavaScript by default.
 
-**Q: Can I refactor the existing code?**
+**Q: Can I refactor the existing code?**  
 A: Absolutely! We want to see your architectural decisions.
 
-**Q: What if I don't finish everything?**
+**Q: What if I don't finish everything?**  
 A: Focus on quality over quantity. It's better to have 2 well-implemented features than 3 rushed ones.
 
-**Q: Can I use React Router for navigation?**
+**Q: Can I use React Router for navigation?**  
 A: It's available in package.json, but the current state-based approach is fine for this challenge.
 
-**Q: Can I use agentic AI tools (e.g., GitHub Copilot, ChatGPT, Cursor, etc.)?**
+**Q: Can I use agentic AI tools (e.g., GitHub Copilot, ChatGPT, Cursor, etc.)?**  
 A: Yes — you’re allowed (and even encouraged) to use agentic AI tools if they help you move faster or structure your work more effectively.
 However, please be transparent:
 
