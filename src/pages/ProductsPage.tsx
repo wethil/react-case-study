@@ -95,7 +95,7 @@ const Products: React.FC = () => {
   const filters: FilterConfig[] = [categoryFilter];
 
   return (
-    <div className="p-4 sm:p-6 transition-all duration-300">
+    <div className="p-4 sm:pl-6 sm:pr-6 sm:pt-1 sm:pb-6 transition-all duration-300">
       <header className="mb-5">
         <p className="text-gray-600 transition-colors duration-200">
           Manage your product inventory
