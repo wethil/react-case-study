@@ -40,40 +40,38 @@ export default function useSort<T extends Record<string, unknown>>(
   // Handler for sorting column
   const handleSort = useCallback((column: keyof T, multi?: boolean) => {
     setSort((prevSort) => {
-      const existingIndex = prevSort.findIndex((s) => s.column === column);
-
-      // Multi-column sorting (shift-click)
       if (multi) {
-        if (existingIndex >= 0) {
-          // Toggle order for existing column
-          const updated = [...prevSort];
-          updated[existingIndex] = {
-            column,
-            order: updated[existingIndex].order === "asc" ? "desc" : "asc",
-          };
-          return updated;
+        const existingSortIndex = prevSort.findIndex(
+          (s) => s.column === column
+        );
+        let newSort: SortColumn<T>[];
+        if (existingSortIndex !== -1) {
+          // Toggle order and move to front
+          const toggled = {
+            ...prevSort[existingSortIndex],
+            order: prevSort[existingSortIndex].order === "asc" ? "desc" : "asc",
+          } as SortColumn<T>;
+          newSort = [
+            toggled,
+            ...prevSort.filter((_, idx) => idx !== existingSortIndex),
+          ];
         } else {
-          // Add new column to sort stack
-          return [...prevSort, { column, order: "asc" }];
+          // Add new column to front with asc order
+          newSort = [{ column, order: "asc" }, ...prevSort];
         }
+        // Remove duplicates if any
+        const seen = new Set<keyof T>();
+        return newSort.filter((s) => {
+          if (seen.has(s.column)) return false;
+          seen.add(s.column);
+          return true;
+        });
+      } else {
+        // Single column sort: replace sort state
+        const existing = prevSort.find((s) => s.column === column);
+        const order = existing && existing.order === "asc" ? "desc" : "asc";
+        return [{ column, order }];
       }
-
-      // Single-column sorting (normal click)
-      if (existingIndex === 0) {
-        // Toggle order for primary column
-        return [
-          {
-            column,
-            order: prevSort[0].order === "asc" ? "desc" : "asc",
-          },
-          ...prevSort.slice(1),
-        ];
-      }
-      // Move column to front, set to ascending
-      return [
-        { column, order: "asc" },
-        ...prevSort.filter((s) => s.column !== column),
-      ];
     });
   }, []);
 
