@@ -15,7 +15,7 @@ const SortArrow: React.FC<SortArrowProps> = ({ column, sort }) => {
   if (!sortCol) return null;
   return (
     <span
-      className="ml-1 transition-transform duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center"
+      className="ml-1 transition-transform duration-200 min-h-11 min-w-11 flex items-center justify-center"
       aria-label={
         sortCol.order === "asc" ? "Sorted ascending" : "Sorted descending"
       }
