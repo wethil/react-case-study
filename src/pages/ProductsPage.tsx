@@ -4,14 +4,14 @@ import useSort from "@hooks/useSort";
 import useGetProducts from "@hooks/useGetProducts";
 import useCategoryFilter from "@hooks/useCategoryFilter";
 import { usePagination } from "@hooks/usePagination";
-import ProductCard from "@components/ProductCard";
-import ProductTable from "@components/ProductTable";
+import ProductTableLayout from "@/components/ProductTableLayout";
 import Pagination from "@components/Pagination";
 import ProductsEmptyState from "@components/ProductsEmptyState";
 import Filters, { FilterConfig } from "@components/Filters";
 import { Product } from "@/types/products.types";
 import type { TableColumn, SortColumn, SortState } from "@/types/table.types";
 import isNumber from "@utils/isNumber";
+import ProductsCardsLayout from "@components/ProductCardLayout";
 
 type CategoryOption = {
   value: string;
@@ -108,10 +108,9 @@ const Products: React.FC = () => {
         <ProductsEmptyState />
       ) : (
         <>
-          {" "}
           {/* Desktop and Tablet: Table Layout */}
           <div className="hidden md:block transition-opacity duration-300">
-            <ProductTable
+            <ProductTableLayout
               data={
                 paginatedItems.length === 0 ? [] : (paginatedItems as Product[])
               }
@@ -127,9 +126,13 @@ const Products: React.FC = () => {
             role="list"
             aria-label="Products list"
           >
-            {paginatedItems.map((product: Product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            <ProductsCardsLayout
+              data={paginatedItems as Product[]}
+              columns={columns}
+              sort={sort as SortState}
+              onSort={handleSortClick}
+              rowKey={(row: Product) => row.id}
+            />
           </div>
           <Pagination
             currentPage={currentPage}
