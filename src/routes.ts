@@ -20,14 +20,8 @@ export const routes: Record<string, Route> = {
   },
   home: {
     path: "/",
-    title: "ProductsUp",
+    title: "Home",
     ariaLabel: "Home page",
     icon: "🏪",
-  },
-  dashboard: {
-    path: "/dashboard",
-    title: "Dashboard",
-    ariaLabel: "Dashboard page",
-    icon: "📊",
   },
 };
