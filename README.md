@@ -163,6 +163,10 @@ On mobile devices or smaller screens, users can activate multi-column sorting us
 
 - More tests can be added for additional edge cases by creating a mock server for the project.
 
+## Usage of AI tools
+
+I actively used co-pilot for creating utils and components. I constantly tried improve the performance and make co-pilot follow the best practices while creating the code. Most of the tests written by co-pilot. I checked if those tests are helpful on my cases and not giving false positives.
+
 ---
 
 ````markdown
